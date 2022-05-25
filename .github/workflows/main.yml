@@ -1,0 +1,503 @@
+name: Test Build Merge Deploy
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  build-name:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Branch name
+        run: echo running on branch ${{ github.event.pull_request.head.ref }}
+
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: pre-commit/action@v2.0.3
+
+  gitleaks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: "0"
+      # Gitleaks check for secrets
+      - name: Gitleaks
+        uses: zricethezav/gitleaks-action@v1.6.0
+
+  build-primary-container:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1.2.0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.CR_PAT }}
+
+      - name: Set version tags
+        id: build-prep
+        run: |
+          DOCKER_IMAGE=ghcr.io/davidasnider/home_automation
+          VERSION=noop
+          if [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION=v1.0.${{ github.event.number }}
+          fi
+          TAGS="${DOCKER_IMAGE}:${VERSION}"
+          echo ::set-output name=version::${VERSION}
+          echo ::set-output name=tags::${TAGS}
+          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+
+      - name: Build and push webhook
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm/v7
+          push: true
+          tags: ${{ steps.build-prep.outputs.tags }}
+
+  build-webhook:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1.2.0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.CR_PAT }}
+
+      - name: Set version tags
+        id: build-prep
+        run: |
+          DOCKER_IMAGE=ghcr.io/davidasnider/cava/webhook
+          VERSION=noop
+          if [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION=v1.0.${{ github.event.number }}
+          fi
+          TAGS="${DOCKER_IMAGE}:${VERSION}"
+          echo ::set-output name=version::${VERSION}
+          echo ::set-output name=tags::${TAGS}
+          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+
+      - name: Build and push webhook
+        uses: docker/build-push-action@v2
+        with:
+          context: ./src/cava
+          file: ./src/cava/webhook/Dockerfile
+          platforms: linux/amd64,linux/arm/v7
+          push: true
+          tags: ${{ steps.build-prep.outputs.tags }}
+
+  build-reader:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1.2.0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.CR_PAT }}
+
+      - name: Set version tags
+        id: build-prep
+        run: |
+          DOCKER_IMAGE=ghcr.io/davidasnider/cava/reader
+          VERSION=noop
+          if [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION=v1.0.${{ github.event.number }}
+          fi
+          TAGS="${DOCKER_IMAGE}:${VERSION}"
+          echo ::set-output name=version::${VERSION}
+          echo ::set-output name=tags::${TAGS}
+          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+
+      - name: Build and push reader
+        uses: docker/build-push-action@v2
+        with:
+          context: ./src/cava/
+          file: ./src/cava/reader/Dockerfile
+          platforms: linux/amd64,linux/arm/v7
+          push: true
+          tags: ${{ steps.build-prep.outputs.tags }}
+
+  build-climacell:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1.2.0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.CR_PAT }}
+
+      - name: Set version tags
+        id: build-prep
+        run: |
+          DOCKER_IMAGE=ghcr.io/davidasnider/cava/climacell
+          VERSION=noop
+          if [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION=v1.0.${{ github.event.number }}
+          fi
+          TAGS="${DOCKER_IMAGE}:${VERSION}"
+          echo ::set-output name=version::${VERSION}
+          echo ::set-output name=tags::${TAGS}
+          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+
+      - name: Build and push climacell
+        uses: docker/build-push-action@v2
+        with:
+          context: ./src/cava/
+          file: ./src/cava/sensors/weather/Dockerfile
+          platforms: linux/amd64,linux/arm/v7
+          push: true
+          tags: ${{ steps.build-prep.outputs.tags }}
+
+  build-amcrest-motion:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1.2.0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.CR_PAT }}
+
+      - name: Set version tags
+        id: build-prep
+        run: |
+          DOCKER_IMAGE=ghcr.io/davidasnider/cava/amcrest-motion
+          VERSION=noop
+          if [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION=v1.0.${{ github.event.number }}
+          fi
+          TAGS="${DOCKER_IMAGE}:${VERSION}"
+          echo ::set-output name=version::${VERSION}
+          echo ::set-output name=tags::${TAGS}
+          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+
+      - name: Build and push amcrest-motion
+        uses: docker/build-push-action@v2
+        with:
+          context: ./src/cava/
+          file: ./src/cava/sensors/Dockerfile
+          platforms: linux/amd64,linux/arm/v7
+          push: true
+          tags: ${{ steps.build-prep.outputs.tags }}
+
+  build-correlator:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1.2.0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.CR_PAT }}
+
+      - name: Set version tags
+        id: build-prep
+        run: |
+          DOCKER_IMAGE=ghcr.io/davidasnider/cava/correlator
+          VERSION=noop
+          if [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION=v1.0.${{ github.event.number }}
+          fi
+          TAGS="${DOCKER_IMAGE}:${VERSION}"
+          echo ::set-output name=version::${VERSION}
+          echo ::set-output name=tags::${TAGS}
+          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+
+      - name: Build and push amcrest-motion
+        uses: docker/build-push-action@v2
+        with:
+          context: ./src/cava/
+          file: ./src/cava/correlator/Dockerfile
+          platforms: linux/amd64,linux/arm/v7
+          push: true
+          tags: ${{ steps.build-prep.outputs.tags }}
+
+  build-runner:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1.2.0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.CR_PAT }}
+
+      - name: Set version tags
+        id: build-prep
+        run: |
+          DOCKER_IMAGE=ghcr.io/davidasnider/cava/runner
+          VERSION=noop
+          if [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION=v1.0.${{ github.event.number }}
+          fi
+          TAGS="${DOCKER_IMAGE}:${VERSION}"
+          echo ::set-output name=version::${VERSION}
+          echo ::set-output name=tags::${TAGS}
+          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+
+      - name: Build and push amcrest-motion
+        uses: docker/build-push-action@v2
+        with:
+          context: ./src/cava/
+          file: ./src/cava/runner/Dockerfile
+          platforms: linux/amd64,linux/arm/v7
+          push: true
+          tags: ${{ steps.build-prep.outputs.tags }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs:
+    - build-name
+    - build-primary-container
+    - build-webhook
+    - build-reader
+    - build-amcrest-motion
+    - build-climacell
+    - build-correlator
+    - build-runner
+    - pre-commit
+    - gitleaks
+
+    steps:
+      - name: Set version tags primary container
+        id: build-prep-primary-container
+        run: |
+          DOCKER_IMAGE=ghcr.io/davidasnider/cava
+          VERSION=noop
+          if [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION="v1.0.${{ github.event.number }}"
+          fi
+          TAGS="${DOCKER_IMAGE}:${VERSION}"
+          echo ::set-output name=version::${VERSION}
+          echo ::set-output name=tags::${TAGS}
+          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+
+      - name: Set version tags webhook
+        id: build-prep-webhook
+        run: |
+          DOCKER_IMAGE=ghcr.io/davidasnider/cava/webhook
+          VERSION=noop
+          if [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION="v1.0.${{ github.event.number }}"
+          fi
+          TAGS="${DOCKER_IMAGE}:${VERSION}"
+          echo ::set-output name=version::${VERSION}
+          echo ::set-output name=tags::${TAGS}
+          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+
+      - name: Set version tags reader
+        id: build-prep-reader
+        run: |
+          DOCKER_IMAGE=ghcr.io/davidasnider/cava/reader
+          VERSION=noop
+          if [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION="v1.0.${{ github.event.number }}"
+          fi
+          TAGS="${DOCKER_IMAGE}:${VERSION}"
+          echo ::set-output name=version::${VERSION}
+          echo ::set-output name=tags::${TAGS}
+          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+
+      - name: Set version tags amcrest-motion
+        id: build-prep-amcrest-motion
+        run: |
+          DOCKER_IMAGE=ghcr.io/davidasnider/cava/amcrest-motion
+          VERSION=noop
+          if [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION="v1.0.${{ github.event.number }}"
+          fi
+          TAGS="${DOCKER_IMAGE}:${VERSION}"
+          echo ::set-output name=version::${VERSION}
+          echo ::set-output name=tags::${TAGS}
+          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+
+      - name: Set version tags climacell
+        id: build-prep-climacell
+        run: |
+          DOCKER_IMAGE=ghcr.io/davidasnider/cava/climacell
+          VERSION=noop
+          if [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION="v1.0.${{ github.event.number }}"
+          fi
+          TAGS="${DOCKER_IMAGE}:${VERSION}"
+          echo ::set-output name=version::${VERSION}
+          echo ::set-output name=tags::${TAGS}
+          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+
+      - name: Set version tags correlator
+        id: build-prep-correlator
+        run: |
+          DOCKER_IMAGE=ghcr.io/davidasnider/cava/correlator
+          VERSION=noop
+          if [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION="v1.0.${{ github.event.number }}"
+          fi
+          TAGS="${DOCKER_IMAGE}:${VERSION}"
+          echo ::set-output name=version::${VERSION}
+          echo ::set-output name=tags::${TAGS}
+          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+
+      - name: Set version tags runner
+        id: build-prep-runner
+        run: |
+          DOCKER_IMAGE=ghcr.io/davidasnider/cava/runner
+          VERSION=noop
+          if [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION="v1.0.${{ github.event.number }}"
+          fi
+          TAGS="${DOCKER_IMAGE}:${VERSION}"
+          echo ::set-output name=version::${VERSION}
+          echo ::set-output name=tags::${TAGS}
+          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Kustomize
+        uses: imranismail/setup-kustomize@v1.6.0
+
+      - name: Update kubernetes resources
+        run: |
+          # Do base image updates
+          cd k8s/bases
+          kustomize edit set image ${{ steps.build-prep-webhook.outputs.tags }}
+          cat kustomization.yaml
+
+          # Do dev image updates
+          cd ../dev
+          kustomize edit set image ${{ steps.build-prep-webhook.outputs.tags }}
+          kustomize edit set image ${{ steps.build-prep-reader.outputs.tags }}
+          kustomize edit set image ${{ steps.build-prep-amcrest-motion.outputs.tags }}
+          kustomize edit set image ${{ steps.build-prep-correlator.outputs.tags }}
+          kustomize edit set image ${{ steps.build-prep-runner.outputs.tags }}
+          kustomize edit set image ${{ steps.build-prep-primary-container.outputs.tags }}
+          cat kustomization.yaml
+
+          # Do prod image updates
+          cd ../prod
+          kustomize edit set image ${{ steps.build-prep-webhook.outputs.tags }}
+          kustomize edit set image ${{ steps.build-prep-reader.outputs.tags }}
+          kustomize edit set image ${{ steps.build-prep-amcrest-motion.outputs.tags }}
+          kustomize edit set image ${{ steps.build-prep-climacell.outputs.tags }}
+          kustomize edit set image ${{ steps.build-prep-correlator.outputs.tags }}
+          kustomize edit set image ${{ steps.build-prep-runner.outputs.tags }}
+          kustomize edit set image ${{ steps.build-prep-primary-container.outputs.tags }}
+          cat kustomization.yaml
+
+      - name: Commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -am "Bump docker tag"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.event.pull_request.head.ref }}
+
+  pr-approve:
+    runs-on: ubuntu-latest
+    needs:
+      - deploy
+    steps:
+      - uses: hmarr/auto-approve-action@v2.1.0
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+  label-pr:
+    runs-on: ubuntu-latest
+    needs:
+      - pr-approve
+    steps:
+      - uses: christianvuerings/add-labels@v1.1
+        with:
+          labels: |
+            automerge
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  automerge:
+    runs-on: ubuntu-latest
+    needs:
+      - label-pr
+    steps:
+      - name: automerge
+        uses: "pascalgn/automerge-action@v0.14.2"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"

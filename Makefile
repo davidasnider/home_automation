@@ -3,3 +3,6 @@ setup-dev:
 	python3 -m venv .venv
 	poetry install
 	pre-commit install
+
+requirements:
+	poetry export -f requirements.txt --output requirements.txt
