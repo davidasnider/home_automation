@@ -598,14 +598,6 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
-name = "mailer"
-version = "0.8.1"
-description = "A module to send email simply in Python"
-category = "main"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "markdown"
 version = "3.3.7"
 description = "Python implementation of Markdown."
@@ -1517,7 +1509,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "3cefcb2606418fe756dfaf1d1cdcfdce96290b97e7ebcb5adee701a6094f47be"
+content-hash = "585cd60231debec470d3fa299c56a683638325769908818359bee6d1c3df69d5"
 
 [metadata.files]
 appnope = [
@@ -1849,10 +1841,6 @@ kiwisolver = [
     {file = "kiwisolver-1.4.2-pp37-pypy37_pp73-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:0e8afdf533b613122e4bbaf3c1e42c2a5e9e2d1dd3a0a017749a7658757cb377"},
     {file = "kiwisolver-1.4.2-pp37-pypy37_pp73-win_amd64.whl", hash = "sha256:42f6ef9b640deb6f7d438e0a371aedd8bef6ddfde30683491b2e6f568b4e884e"},
     {file = "kiwisolver-1.4.2.tar.gz", hash = "sha256:7f606d91b8a8816be476513a77fd30abe66227039bd6f8b406c348cb0247dcc9"},
-]
-mailer = [
-    {file = "mailer-0.8.1.win32.exe", hash = "sha256:0a66ab3de3c77e36d4ef744a03d6ee24271546a786580020bb226b7cea65843e"},
-    {file = "mailer-0.8.1.zip", hash = "sha256:3411a12197731e0d5379ab194d9acc8d0d71c8b95fdfb11474d67c3e9860070e"},
 ]
 markdown = [
     {file = "Markdown-3.3.7-py3-none-any.whl", hash = "sha256:f5da449a6e1c989a4cea2631aa8ee67caa5a2ef855d551c88f9e309f4634c621"},

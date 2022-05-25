@@ -12,7 +12,6 @@ pandas = "^1.4.2"
 panel = "^0.13.0"
 bokeh = "^2.4.3"
 pandas-bokeh = "^0.5.5"
-mailer = "^0.8.1"
 tabulate = "^0.8.9"
 
 [tool.poetry.dev-dependencies]

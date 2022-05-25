@@ -22,9 +22,6 @@ importlib-metadata==4.11.4; python_version < "3.10" and python_version >= "3.7" 
 jinja2==3.1.2; python_version >= "3.7" \
     --hash=sha256:6088930bfe239f0e6710546ab9c19c9ef35e29792895fed6e6e31a023a182a61 \
     --hash=sha256:31351a702a408a9e7595a8fc6150fc3f43bb6bf7e319770cbc0db9df9437e852
-mailer==0.8.1 \
-    --hash=sha256:0a66ab3de3c77e36d4ef744a03d6ee24271546a786580020bb226b7cea65843e \
-    --hash=sha256:3411a12197731e0d5379ab194d9acc8d0d71c8b95fdfb11474d67c3e9860070e
 markdown==3.3.7; python_version >= "3.6" \
     --hash=sha256:f5da449a6e1c989a4cea2631aa8ee67caa5a2ef855d551c88f9e309f4634c621 \
     --hash=sha256:cbb516f16218e643d8e0a95b309f77eb118cb138d39a4f27851e6a63581db874
