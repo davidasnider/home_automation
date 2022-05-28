@@ -93,84 +93,6 @@ jobs:
           echo ::set-output name=tags::${TAGS}
           echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
 
-      - name: Set version tags webhook
-        id: build-prep-webhook
-        run: |
-          DOCKER_IMAGE=ghcr.io/davidasnider/cava/webhook
-          VERSION=noop
-          if [[ $GITHUB_REF == refs/pull/* ]]; then
-            VERSION="v1.0.${{ github.event.number }}"
-          fi
-          TAGS="${DOCKER_IMAGE}:${VERSION}"
-          echo ::set-output name=version::${VERSION}
-          echo ::set-output name=tags::${TAGS}
-          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-
-      - name: Set version tags reader
-        id: build-prep-reader
-        run: |
-          DOCKER_IMAGE=ghcr.io/davidasnider/cava/reader
-          VERSION=noop
-          if [[ $GITHUB_REF == refs/pull/* ]]; then
-            VERSION="v1.0.${{ github.event.number }}"
-          fi
-          TAGS="${DOCKER_IMAGE}:${VERSION}"
-          echo ::set-output name=version::${VERSION}
-          echo ::set-output name=tags::${TAGS}
-          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-
-      - name: Set version tags amcrest-motion
-        id: build-prep-amcrest-motion
-        run: |
-          DOCKER_IMAGE=ghcr.io/davidasnider/cava/amcrest-motion
-          VERSION=noop
-          if [[ $GITHUB_REF == refs/pull/* ]]; then
-            VERSION="v1.0.${{ github.event.number }}"
-          fi
-          TAGS="${DOCKER_IMAGE}:${VERSION}"
-          echo ::set-output name=version::${VERSION}
-          echo ::set-output name=tags::${TAGS}
-          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-
-      - name: Set version tags climacell
-        id: build-prep-climacell
-        run: |
-          DOCKER_IMAGE=ghcr.io/davidasnider/cava/climacell
-          VERSION=noop
-          if [[ $GITHUB_REF == refs/pull/* ]]; then
-            VERSION="v1.0.${{ github.event.number }}"
-          fi
-          TAGS="${DOCKER_IMAGE}:${VERSION}"
-          echo ::set-output name=version::${VERSION}
-          echo ::set-output name=tags::${TAGS}
-          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-
-      - name: Set version tags correlator
-        id: build-prep-correlator
-        run: |
-          DOCKER_IMAGE=ghcr.io/davidasnider/cava/correlator
-          VERSION=noop
-          if [[ $GITHUB_REF == refs/pull/* ]]; then
-            VERSION="v1.0.${{ github.event.number }}"
-          fi
-          TAGS="${DOCKER_IMAGE}:${VERSION}"
-          echo ::set-output name=version::${VERSION}
-          echo ::set-output name=tags::${TAGS}
-          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-
-      - name: Set version tags runner
-        id: build-prep-runner
-        run: |
-          DOCKER_IMAGE=ghcr.io/davidasnider/cava/runner
-          VERSION=noop
-          if [[ $GITHUB_REF == refs/pull/* ]]; then
-            VERSION="v1.0.${{ github.event.number }}"
-          fi
-          TAGS="${DOCKER_IMAGE}:${VERSION}"
-          echo ::set-output name=version::${VERSION}
-          echo ::set-output name=tags::${TAGS}
-          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-
       - name: Check out code
         uses: actions/checkout@v2
         with:
@@ -186,24 +108,8 @@ jobs:
           kustomize edit set image ${{ steps.build-prep-webhook.outputs.tags }}
           cat kustomization.yaml
 
-          # Do dev image updates
-          cd ../dev
-          kustomize edit set image ${{ steps.build-prep-webhook.outputs.tags }}
-          kustomize edit set image ${{ steps.build-prep-reader.outputs.tags }}
-          kustomize edit set image ${{ steps.build-prep-amcrest-motion.outputs.tags }}
-          kustomize edit set image ${{ steps.build-prep-correlator.outputs.tags }}
-          kustomize edit set image ${{ steps.build-prep-runner.outputs.tags }}
-          kustomize edit set image ${{ steps.build-prep-primary-container.outputs.tags }}
-          cat kustomization.yaml
-
           # Do prod image updates
           cd ../prod
-          kustomize edit set image ${{ steps.build-prep-webhook.outputs.tags }}
-          kustomize edit set image ${{ steps.build-prep-reader.outputs.tags }}
-          kustomize edit set image ${{ steps.build-prep-amcrest-motion.outputs.tags }}
-          kustomize edit set image ${{ steps.build-prep-climacell.outputs.tags }}
-          kustomize edit set image ${{ steps.build-prep-correlator.outputs.tags }}
-          kustomize edit set image ${{ steps.build-prep-runner.outputs.tags }}
           kustomize edit set image ${{ steps.build-prep-primary-container.outputs.tags }}
           cat kustomization.yaml
 
@@ -216,7 +122,7 @@ jobs:
       - name: Push changes
         uses: ad-m/github-push-action@v0.6.0
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.CR_PAT }}
           branch: ${{ github.event.pull_request.head.ref }}
 
   pr-approve:
@@ -226,7 +132,7 @@ jobs:
     steps:
       - uses: hmarr/auto-approve-action@v2.1.0
         with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          github-token: "${{ secrets.CR_PAT }}"
 
   label-pr:
     runs-on: ubuntu-latest
@@ -238,7 +144,7 @@ jobs:
           labels: |
             automerge
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.CR_PAT }}
 
   automerge:
     runs-on: ubuntu-latest
@@ -248,4 +154,4 @@ jobs:
       - name: automerge
         uses: "pascalgn/automerge-action@v0.14.2"
         env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_TOKEN: "${{ secrets.CR_PAT }}"
