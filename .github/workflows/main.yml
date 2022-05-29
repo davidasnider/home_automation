@@ -117,7 +117,7 @@ jobs:
     steps:
       - uses: hmarr/auto-approve-action@v2.1.0
         with:
-          github-token: "${{ secrets.CR_PAT }}"
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
 
   label-pr:
     runs-on: ubuntu-latest
@@ -129,7 +129,7 @@ jobs:
           labels: |
             automerge
         env:
-          GITHUB_TOKEN: ${{ secrets.CR_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   automerge:
     runs-on: ubuntu-latest
@@ -139,4 +139,4 @@ jobs:
       - name: automerge
         uses: "pascalgn/automerge-action@v0.14.2"
         env:
-          GITHUB_TOKEN: "${{ secrets.CR_PAT }}"
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
