@@ -98,21 +98,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Kustomize
-        uses: imranismail/setup-kustomize@v1.6.0
-
-      - name: Update kubernetes resources
-        run: |
-          # Do base image updates
-          cd k8s/bases
-          kustomize edit set image ${{ steps.build-prep-webhook.outputs.tags }}
-          cat kustomization.yaml
-
-          # Do prod image updates
-          cd ../prod
-          kustomize edit set image ${{ steps.build-prep-primary-container.outputs.tags }}
-          cat kustomization.yaml
-
       - name: Commit files
         run: |
           git config --local user.email "action@github.com"
