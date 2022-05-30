@@ -5,10 +5,7 @@ from typing import Any, Optional
 import pandas as pd
 import requests
 from pydantic import BaseModel, validator
-
 from tabulate import tabulate
-
-pd.set_option("plotting.backend", "pandas_bokeh")
 
 # Class contains all the code for generating the sprinkler multiplier report
 # as well as updating our home automation system.

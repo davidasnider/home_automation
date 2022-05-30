@@ -1,3 +1,6 @@
+ci:
+  skip: [update-requirements-txt]
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.2.0
@@ -32,3 +35,13 @@ repos:
         additional_dependencies:
           - mdformat-tables
           - mdformat-black
+
+  - repo: local
+    hooks:
+    - id: update-requirements-txt
+      name: update-requirements-txt
+      description: 'Generate requirements.txt based on poetry.lock'
+      entry: poetry
+      args: [export, --format, requirements.txt, --output, requirements.txt]
+      language: system
+      pass_filenames: false
