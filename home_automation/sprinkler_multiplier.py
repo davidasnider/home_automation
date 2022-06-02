@@ -92,7 +92,8 @@ class sprinkler_multiplier(BaseModel):
             (-99, 70),  # We don't water here
             (70, 80),  # We set to 1 here
             (80, 90),  # We set to 2 here
-            (90, 200),  # We set to 3 here
+            (90, 100),  # We set to 3 here
+            (100, 200),  # It's damn hot... turn on another day
         ]
 
         # Are we getting lots of rain? Just set it to zero overall
