@@ -1,0 +1,35 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: calc-sprinkler-multiplier
+spec:
+  template:
+    spec:
+      containers:
+        - name: sprinkler-multiplier
+          image: ghcr.io/davidasnider/home_automation:v1.0.13
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: indigo_password
+              valueFrom:
+                secretKeyRef:
+                  name: credentials
+                  key: indigo_password
+            - name: indigo_username
+              valueFrom:
+                secretKeyRef:
+                  name: credentials
+                  key: indigo_username
+            - name: tmrw_location_id
+              valueFrom:
+                secretKeyRef:
+                  name: credentials
+                  key: tmrw_location_id
+            - name: tomorrow_io
+              valueFrom:
+                secretKeyRef:
+                  name: credentials
+                  key: tomorrow_io
+      restartPolicy: Never
+  backoffLimit: 4
