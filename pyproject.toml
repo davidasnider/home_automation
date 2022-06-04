@@ -5,7 +5,7 @@ description = ""
 authors = ["David Snider <david@davidsnider.org>"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.10"
 pydantic = "^1.9.1"
 requests = "^2.27.1"
 pandas = "^1.4.2"
