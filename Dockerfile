@@ -1,5 +1,5 @@
 # Build Image
-FROM python:3.9 AS compile-image
+FROM python:3.10 AS compile-image
 
 RUN useradd -m -u 1000 home_automation
 USER home_automation
@@ -7,7 +7,7 @@ COPY requirements.txt .
 RUN pip install --user -r requirements.txt
 
 # Runtime Image
-FROM python:3.9-slim AS final-image
+FROM python:3.10-slim AS final-image
 RUN useradd -m -u 1000 home_automation
 USER home_automation
 COPY --from=compile-image /home/home_automation/.local /home/home_automation/.local
