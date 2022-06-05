@@ -6,3 +6,6 @@ setup-dev:
 
 requirements:
 	poetry export -f requirements.txt --output requirements.txt
+
+run-tests:
+	poetry run pytest -s -v
