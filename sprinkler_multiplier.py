@@ -1,3 +1,6 @@
+"""Primary script for calculating the sprinkler multiplier data and posting
+to Indigo.
+"""
 from home_automation import sprinkler_multiplier, utilities
 
 # Create our multiplier object
@@ -10,4 +13,4 @@ sprinkler.calc_multiplier()
 utilities.update_indigo_variable("sprinklerDurationMultiplier", sprinkler.value)
 
 # Email Report
-sprinkler.report()
+sprinkler.text_report()
