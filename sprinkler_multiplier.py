@@ -12,5 +12,12 @@ sprinkler.calc_multiplier()
 # Update our Home Automation Server
 utilities.update_indigo_variable("sprinklerDurationMultiplier", sprinkler.value)
 
-# Email Report
-sprinkler.text_report()
+# Generate the chart
+sprinkler.get_chart()
+
+# Email html report
+email_message = sprinkler.get_email_message()
+utilities.send_email(email_message)
+
+# Print Text Report
+print(sprinkler.text_report())
