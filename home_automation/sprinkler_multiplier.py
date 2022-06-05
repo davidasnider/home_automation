@@ -1,3 +1,4 @@
+"""Module for dealing with sprinkler automation, specifically the multiplier."""
 import json
 import os
 from typing import Any, Optional
@@ -7,11 +8,27 @@ import requests
 from pydantic import BaseModel, validator
 from tabulate import tabulate
 
-# Class contains all the code for generating the sprinkler multiplier report
-# as well as updating our home automation system.
-
 
 class sprinkler_multiplier(BaseModel):
+    """
+    A class used to generate the sprinkler multiplier report as well as update
+    our home automation system.
+
+    Attributes
+    ----------
+    location: str
+        The Tomorrow.io location ID, found in the developer console. Set via
+        an environment variable: tmrw_location_id
+    api_key: str
+        The Tomorrow.io API key, found in the developer console. Set via an
+        environment variable: tomorrow_io
+    my_report: Any
+
+    Methods
+    -------
+    validate_is_not_none(v: Any)
+        Validate that the value is not None, if None, raise a ValueError
+    """
 
     location: str = os.getenv("tmrw_location_id")
     api_key: str = os.getenv("tomorrow_io")
@@ -31,12 +48,36 @@ class sprinkler_multiplier(BaseModel):
     # before we run the rest of the functions.
     @validator("location", "api_key", always=True)
     def validate_is_not_none(cls, v):
+        """Ensures that passed in attributes are not None
+
+        This is a custom validator used in Pydantic to ensure that both the
+        location and api_key are not None during class instantiation. These
+        are fed from an environment variable which will return None if not
+        set, therefore the validation is necessary. If the values are None,
+        the validator will raise a ValueError.
+
+        Parameters
+        ----------
+        v : Any
+            The variable to validate is not None
+
+        Returns
+        -------
+        v : Any
+            Will return whatever is passed in if it is not None
+
+        Raises
+        ------
+        ValueError
+            Informs the user that the environment variable is not set
+        """
         if v is None:
             raise ValueError("Environment variable not set")
         return v
 
     # Get latest measurements
     def update_data(self):
+        """Retrieve the latest measurements from Tomorrow.io"""
         url = "https://api.tomorrow.io/v4/timelines"
         payload = {
             "units": "imperial",
@@ -80,8 +121,8 @@ class sprinkler_multiplier(BaseModel):
         else:
             print("Get forecast failed, error: ", response.text)
 
-    # Calculate the sprinkler multiplier for home automation system
     def calc_multiplier(self):
+        """Calculate the sprinkler multiplier for home automation system"""
 
         self.update_data()  # First lets update the forecast data
 
@@ -90,10 +131,10 @@ class sprinkler_multiplier(BaseModel):
         # number of days to water. Temp ranges in F
         ranges = [
             (-99, 70),  # We don't water here
-            (70, 80),  # We set to 1 here
-            (80, 90),  # We set to 2 here
-            (90, 100),  # We set to 3 here
-            (100, 200),  # It's damn hot... turn on another day
+            (70, 80),  # We set to 1 day a week
+            (80, 90),  # We set to 2 days a week
+            (90, 100),  # We set to 3 days a week
+            (100, 200),  # It's damn hot... turn on a 4th day
         ]
 
         # Are we getting lots of rain? Just set it to zero overall
@@ -116,14 +157,16 @@ class sprinkler_multiplier(BaseModel):
 
     @property
     def value(self):
+        """Returns the multiplier value that has been calculated"""
         return self._value  # This should return the sprinkler multiplier value
 
     @property
     def rain(self):
+        """Returns the amount of calculated rain"""
         return self._forecast_rain  # Tell us the amount of rain in next 3 days
 
-    def report(self):
-        # Create a datastructure to print
+    def text_report(self):
+        """Prints a simple table of the multiplier report"""
         headers = ["Measurement", "Value"]
         data = [
             ["Temp", self._forecast_averages["Temp"]],
