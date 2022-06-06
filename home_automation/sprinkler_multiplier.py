@@ -1,12 +1,23 @@
 """Module for dealing with sprinkler automation, specifically the multiplier."""
+import inspect
 import json
-import os
+import sys
+import tempfile
+from email.message import EmailMessage
+from email.utils import make_msgid
 from typing import Any, Optional
 
+import markdown
+import matplotlib.dates as mdates
+import matplotlib.pyplot as plt
 import pandas as pd
 import requests
 from pydantic import BaseModel, validator
 from tabulate import tabulate
+
+from home_automation import utilities
+
+settings = utilities.Settings()
 
 
 class sprinkler_multiplier(BaseModel):
@@ -30,8 +41,8 @@ class sprinkler_multiplier(BaseModel):
         Validate that the value is not None, if None, raise a ValueError
     """
 
-    location: str = os.getenv("tmrw_location_id")
-    api_key: str = os.getenv("tomorrow_io")
+    location: str = settings.tmrw_location_id
+    api_key: str = settings.tomorrow_io
     my_report: Optional[Any] = None
     my_report_html: str = ""
     _forecast: Optional[dict]
@@ -39,9 +50,14 @@ class sprinkler_multiplier(BaseModel):
     _forecast_averages: Any
     _forecast_rain: int = 0  # Default to zero, no rain
     _value: int = 0  # Default to zero, we don't water
+    _chart_png = tempfile.NamedTemporaryFile(
+        delete=False
+    ).name  # Just the temp filename is all we need
 
     # Anything with an underscore is a private attribute by default
     class Config:
+        """Sets configuration for the BaseModel class"""
+
         underscore_attrs_are_private = True
 
     # We need to make sure these variables are not NONE (they don't exist)
@@ -118,8 +134,12 @@ class sprinkler_multiplier(BaseModel):
             self._forecast_rain = self._forecast_df[["Rain (in)"]][0:3].sum()[
                 "Rain (in)"
             ]
+        elif response.status_code == 429:
+            print(f"Retry after {response.headers['Retry-After']} seconds")
+            sys.exit(1)
         else:
             print("Get forecast failed, error: ", response.text)
+            sys.exit(255)
 
     def calc_multiplier(self):
         """Calculate the sprinkler multiplier for home automation system"""
@@ -174,4 +194,56 @@ class sprinkler_multiplier(BaseModel):
             ["Multiplier", self.value],
         ]
 
-        print(tabulate(data, headers=headers))
+        return tabulate(data, headers=headers)
+
+    def get_chart(self):
+        """Returns a png of a matplotlib figure of the multiplier report"""
+        df = self._forecast_df
+        fig, ax1 = plt.subplots()
+        ax1.plot(df.index, df.Temp, marker="o", color="green")
+        ax1.set_ylim(0, 110)
+        ax1.set_ylabel("Temperature (F)", color="green")
+        ax1.legend(["Temp"], loc="upper left")
+        ax1.xaxis.set_major_formatter(mdates.DateFormatter("%m-%d"))
+
+        ax2 = ax1.twinx()
+        ax2.set_ylim(0, 1)
+        ax2.set_ylabel("Rain (in)", color="blue")
+        ax2.bar(df.index, df["Rain (in)"], color="blue")
+        ax2.legend(["Rain"], loc="upper right")
+        fig.savefig(self._chart_png, format="png")
+
+    def get_email_message(self) -> EmailMessage:
+        """Returns an email message with the multiplier report
+
+        Returns
+        -------
+        EmailMessage: A python email message object ready to send
+        """
+        graph_cid = make_msgid()
+        markdown_text = f"""
+        ## Sprinkler multiplier report
+        ![graph](cid:{graph_cid[1:-1]})
+
+        | | Value |
+        | :--- | ---: |
+        | Temp | {self._forecast_averages['Temp']:.2f} |
+        | Rain | {self.rain:.2f} |
+        | Multiplier | {self.value} |
+        """
+        markdown_html = markdown.markdown(
+            inspect.cleandoc(markdown_text), extensions=["tables"]
+        )
+        pretty_html = utilities.make_pretty_html(markdown_html.strip())
+
+        msg = EmailMessage()
+        msg["Subject"] = "Sprinkler multiplier report"
+        msg["From"] = settings.email_from
+        msg["To"] = settings.email_to
+        msg.set_content(self.text_report())
+        msg.add_alternative(pretty_html, subtype="html")
+
+        with open(self._chart_png, "rb") as img:
+            msg.get_payload()[1].add_related(img.read(), "image", "png", cid=graph_cid)
+
+        return msg

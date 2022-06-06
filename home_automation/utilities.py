@@ -5,6 +5,7 @@ from email.message import EmailMessage
 from xmlrpc.client import Boolean
 
 import requests
+from pydantic import BaseSettings
 from requests.auth import HTTPDigestAuth
 
 # Get some variables from the environment
@@ -13,31 +14,47 @@ indigo_password = os.getenv("indigo_password")
 
 # Contains utilities that will be used across home automation scripts.
 
+
+class Settings(BaseSettings):
+    """Pulls in environment variables and sets them as attributes
+
+    Attributes
+    ----------
+    smtp_server: str
+        The SMTP server to use for sending emails.
+    email_to: str
+        The email address to send the email to.
+    email_from: str
+        The email address to send the email from.
+    tmrw_location_id: str
+        The Tomorrow.io location ID, found in the developer console. Set via
+        an environment variable: tmrw_location_id
+    tomorrow_io: str
+        The Tomorrow.io API key, found in the developer console. Set via an
+        environment variable: tomorrow_io
+
+    """
+
+    smtp_server: str = "mail.thesniderpad.com"
+    email_to: str = "david@davidsnider.org"
+    email_from: str = "david@davidsnider.org"
+    tmrw_location_id: str
+    tomorrow_io: str
+
+
 # Mail function
 
 
-def send_email(address: str, subject: str, msgBody):
+def send_email(message: EmailMessage):
     """Sends an email to yourself
 
-    This is intentionally going to send the email to the same address that it
-    is sent from. Not designed to be a general purpose email sender. It is only
-    used for notifications coming from our automation system.
+    Sends an EmailMessage object to the sniderpad smtp server
 
     Parameters
     ----------
-    address : str
-        Email address to send the to, as well as from.
-    subject : str
-        What should the email subject be?
-    msgBody : str
-        What will be displayed in the email body?
+    msgBody : EmailMessage
+        A fully formed EmailMessage object, ready to send
     """
-    message = EmailMessage()
-    message.set_content(msgBody, subtype="html")
-    message.add_alternative(msgBody, subtype="html")
-    message["From"] = address
-    message["To"] = address
-    message["Subject"] = subject
 
     s = smtplib.SMTP(host="mail.thesniderpad.com", port=2525)
     s.send_message(message)
@@ -90,3 +107,40 @@ def get_indigo_variable(variable: str):
     if r.ok:
         return_value = r.json()["value"]
         return return_value
+
+
+def make_pretty_html(html_string: str):
+    """Makes HTML pretty based on Boostrap css
+
+    Parameters
+    ----------
+    html_string : str
+        An HTML String (minus the body and it's parent tags, head..etc)
+
+    Returns
+    -------
+    html_string: str
+        A string with the HTML tags formatted for a Bootstrap table. Usually
+        produced via markdown `markdown.markdown(markdown_text, extensions=['tables']`
+    """
+
+    cssin = open("home_automation/css/bootstrap.min.css", "r")
+    new_html = f"""<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <style type="text/css">
+            {cssin.read()}
+        </style>
+    </head>
+        <body>
+            {html_string}
+        </body>
+    </html>
+    """
+
+    # Replace table with style info
+    html_string = new_html.replace(
+        "<table>", '<table style="width: auto;" class="table table-striped">'
+    )
+    return html_string
