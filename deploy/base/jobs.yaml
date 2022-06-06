@@ -33,3 +33,31 @@ spec:
                   key: tomorrow_io
       restartPolicy: Never
   backoffLimit: 4
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: update-magic-mirror-temp
+spec:
+  template:
+    spec:
+      containers:
+        - name: update-magic-mirror-temp
+          image: ghcr.io/davidasnider/home_automation:v1.0.13
+          imagePullPolicy: IfNotPresent
+          command:
+            - python3
+            - /app/update_magic_mirror_temp.py
+          env:
+            - name: indigo_password
+              valueFrom:
+                secretKeyRef:
+                  name: credentials
+                  key: indigo_password
+            - name: indigo_username
+              valueFrom:
+                secretKeyRef:
+                  name: credentials
+                  key: indigo_username
+      restartPolicy: Never
+  backoffLimit: 4

@@ -1,5 +1,4 @@
 """Utilities modules that are common to many scripts and modules"""
-import os
 import smtplib
 from email.message import EmailMessage
 from xmlrpc.client import Boolean
@@ -8,9 +7,9 @@ import requests
 from pydantic import BaseSettings
 from requests.auth import HTTPDigestAuth
 
-# Get some variables from the environment
-indigo_username = os.getenv("indigo_username")
-indigo_password = os.getenv("indigo_password")
+# # Get some variables from the environment
+# indigo_username = os.getenv("indigo_username")
+# indigo_password = os.getenv("indigo_password")
 
 # Contains utilities that will be used across home automation scripts.
 
@@ -26,6 +25,16 @@ class Settings(BaseSettings):
         The email address to send the email to.
     email_from: str
         The email address to send the email from.
+    indigo_url: str
+        The URL to the Indigo server.
+    magic_mirror_url: str
+        The URL to the Magic Mirror server.
+    indigo_username: str
+        The username to use to authenticate to the Indigo server. Set via
+        environment variable.
+    indigo_password: str
+        The password to use to authenticate to the Indigo server. Set via
+        environment variable.
     tmrw_location_id: str
         The Tomorrow.io location ID, found in the developer console. Set via
         an environment variable: tmrw_location_id
@@ -38,9 +47,16 @@ class Settings(BaseSettings):
     smtp_server: str = "mail.thesniderpad.com"
     email_to: str = "david@davidsnider.org"
     email_from: str = "david@davidsnider.org"
+    indigo_url: str = "blanc.thesniderpad.com:8000"
+    magic_mirror_url: str = "giro.thesniderpad.com:8080"
+    indigo_username: str
+    indigo_password: str
     tmrw_location_id: str
     tomorrow_io: str
 
+
+# Make these available in this module
+SETTINGS = Settings()
 
 # Mail function
 
@@ -79,13 +95,39 @@ def update_indigo_variable(variable: str, payload) -> Boolean:
     """
 
     # this function updates variables in Indigo.  It probably should validate that they exist first
-    url = (
-        "http://blanc.thesniderpad.com:8000/variables/"
-        + variable
-        + "?_method=put&value="
-        + str(payload)
+    url = f"http://{SETTINGS.indigo_url}/variables/{variable}?_method=put&value=" + str(
+        payload
     )
-    r = requests.get(url, auth=HTTPDigestAuth(indigo_username, indigo_password))
+    r = requests.get(
+        url, auth=HTTPDigestAuth(SETTINGS.indigo_username, SETTINGS.indigo_password)
+    )
+    return r.ok
+
+
+def update_magicmirror_internal_temperature(temperature: float):
+    """Updates the internal temperature of the MagicMirror variable
+
+    Parameters
+    ----------
+    temperature : float
+        The temperature to update the MagicMirror with.
+
+    Returns
+    -------
+    Boolean
+        True if successful, False if not.
+    """
+    print(f"Updating MagicMirror internal temperature: {temperature}")
+    data = f"temp={temperature}".encode("utf-8")
+    header = {"Content-Type": "application/x-www-form-urlencoded"}
+    url = f"http://{SETTINGS.magic_mirror_url}/indoor-temperature"
+    r = requests.post(url, data=data, headers=header)
+    if r.ok:
+        print(f"Successfully update temperature variable to {temperature}")
+    else:
+        print(
+            f"Failed to update temperature variable to {temperature}, error: {r.text}"
+        )
     return r.ok
 
 
@@ -103,7 +145,9 @@ def get_indigo_variable(variable: str):
         The value of the requested variable.
     """
     url = f"http://blanc.thesniderpad.com:8000/variables/{variable}.json"
-    r = requests.get(url, auth=HTTPDigestAuth(indigo_username, indigo_password))
+    r = requests.get(
+        url, auth=HTTPDigestAuth(SETTINGS.indigo_username, SETTINGS.indigo_password)
+    )
     if r.ok:
         return_value = r.json()["value"]
         return return_value
