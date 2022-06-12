@@ -84,7 +84,7 @@ jobs:
 
       - name: Update kubernetes resources
         run: |
-          cd deploy/base
+          cd deploy
           kustomize edit set image ${{ steps.build-prep-primary-container.outputs.tags }}
           cat kustomization.yaml
 
