@@ -9,6 +9,9 @@ namespace: rundeck
 # This file must be created by your deployment tools, we use Ansible. See ansible
 # deployments for creating.
 secretGenerator:
-  - name: credentials
-    envs:
-    - .env
+- envs:
+  - .env
+  name: credentials
+images:
+- name: ghcr.io/davidasnider/home_automation
+  newTag: v1.0.25
