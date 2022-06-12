@@ -3,6 +3,8 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: calc-sprinkler-multiplier
+  labels:
+    app: home_automation
 spec:
   template:
     spec:
@@ -40,6 +42,8 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: update-magic-mirror-temp
+  labels:
+    app: home_automation
 spec:
   template:
     spec:
