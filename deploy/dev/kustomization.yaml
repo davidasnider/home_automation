@@ -9,6 +9,9 @@ namespace: default
 # use a hard link to root .env file: `ln ../.env dev/.env` as the file must
 # be in the context of the kustomize build (parent folder of dev and base)
 secretGenerator:
-  - name: credentials
-    envs:
-    - .env
+- envs:
+  - .env
+  name: credentials
+images:
+- name: ghcr.io/davidasnider/home_automation
+  newTag: v1.0.25
