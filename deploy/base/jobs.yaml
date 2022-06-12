@@ -67,5 +67,15 @@ spec:
                 secretKeyRef:
                   name: credentials
                   key: indigo_username
+            - name: tmrw_location_id
+              valueFrom:
+                secretKeyRef:
+                  name: credentials
+                  key: tmrw_location_id
+            - name: tomorrow_io
+              valueFrom:
+                secretKeyRef:
+                  name: credentials
+                  key: tomorrow_io
       restartPolicy: Never
   backoffLimit: 4
