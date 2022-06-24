@@ -231,9 +231,9 @@ pytz==2022.1; python_version >= "3.8" \
 requests==2.28.0; python_version >= "3.7" and python_version < "4" \
     --hash=sha256:bc7861137fbce630f17b03d3ad02ad0bf978c844f3536d0edda6499dafce2b6f \
     --hash=sha256:d568723a7ebd25875d8d1eaf5dfa068cd2fc8194b2e483d7b1f7c81918dbec6b
-setuptools-scm==6.4.2; python_version >= "3.7" \
-    --hash=sha256:acea13255093849de7ccb11af9e1fb8bde7067783450cee9ef7a93139bddf6d4 \
-    --hash=sha256:6833ac65c6ed9711a4d5d2266f8024cfa07c533a0e55f4c12f6eff280a5a9e30
+setuptools-scm==7.0.1; python_version >= "3.7" \
+    --hash=sha256:23b2e561fd3db49d168f282384af4730092a8c8c6db6d3451ce93a5813c14509 \
+    --hash=sha256:d1c631fc3a4281754274155ef4a40de24b1d1c718df00ead147b08ab690615b2
 six==1.16.0; python_version >= "3.8" and python_full_version < "3.0.0" or python_full_version >= "3.3.0" and python_version >= "3.8" \
     --hash=sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254 \
     --hash=sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926
