@@ -243,7 +243,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
 name = "detect-secrets"
-version = "1.2.0"
+version = "1.3.0"
 description = "Tool for detecting secrets in the codebase"
 category = "dev"
 optional = false
@@ -1470,7 +1470,7 @@ notebook = ">=4.4.1"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "4a75f28fe5a9659a224edf941648f57eeab8a5f2bb925b4b2640069cf9898f37"
+content-hash = "3a41273c69098e9ce520143b8e200e84a164b357d2a5c2a6bc7a118241644b99"
 
 [metadata.files]
 appnope = [
@@ -1662,8 +1662,8 @@ defusedxml = [
     {file = "defusedxml-0.7.1.tar.gz", hash = "sha256:1bb3032db185915b62d7c6209c5a8792be6a32ab2fedacc84e01b52c51aa3e69"},
 ]
 detect-secrets = [
-    {file = "detect_secrets-1.2.0-py3-none-any.whl", hash = "sha256:51a8fc5d89340ba6d0c688049fc3381a2f24c6fbaf2f542e15f5b873b95bafe3"},
-    {file = "detect_secrets-1.2.0.tar.gz", hash = "sha256:c160e897b3d0e81bf9cf0f6cc2e5e6434fa609a159f9a2849fcae0a08b4e2a30"},
+    {file = "detect_secrets-1.3.0-py3-none-any.whl", hash = "sha256:86ff0936a7680e9e04f7a6edc1f11507c12a4fa3b06f077d969776124cd5dc91"},
+    {file = "detect_secrets-1.3.0.tar.gz", hash = "sha256:a93ef7d141f48a3a6531bc6d4ccf6d022d23bc10afd1e100a91ca9d2c25abb90"},
 ]
 distlib = [
     {file = "distlib-0.3.4-py2.py3-none-any.whl", hash = "sha256:6564fe0a8f51e734df6333d08b8b94d4ea8ee6b99b5ed50613f731fd4089f34b"},
