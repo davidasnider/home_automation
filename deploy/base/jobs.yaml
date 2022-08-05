@@ -8,8 +8,6 @@ metadata:
 spec:
   template:
     spec:
-      nodeSelector:
-        kubernetes.io/arch: amd64
       containers:
         - name: sprinkler-multiplier
           image: ghcr.io/davidasnider/home_automation:v1.0.13
