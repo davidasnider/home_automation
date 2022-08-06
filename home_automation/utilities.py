@@ -63,7 +63,7 @@ class Settings(BaseSettings):
     smtp_server: str = "mail.thesniderpad.com"
     email_to: str = "david@davidsnider.org"
     email_from: str = "david@davidsnider.org"
-    indigo_url: str = "blanc.thesniderpad.com:8000"
+    indigo_url: str = "http://blanc.thesniderpad.com:8000"
     magic_mirror_url: str = "giro.thesniderpad.com:8080"
     indigo_username: str
     indigo_password: str
@@ -116,7 +116,7 @@ def update_indigo_variable(variable: str, payload) -> Boolean:
     """
 
     # this function updates variables in Indigo.  It probably should validate that they exist first
-    url = f"http://{SETTINGS.indigo_url}/variables/{variable}?_method=put&value=" + str(
+    url = f"{SETTINGS.indigo_url}/variables/{variable}?_method=put&value=" + str(
         payload
     )
     r = requests.get(
