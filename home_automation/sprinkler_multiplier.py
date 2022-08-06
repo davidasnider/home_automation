@@ -43,7 +43,7 @@ class sprinkler_multiplier(BaseModel):
     """
 
     location: str = settings.tmrw_location_id
-    api_key: str = settings.tomorrow_io
+    api_key: str = settings.tomorrow_io_api_key
     my_report: Optional[Any] = None
     my_report_html: str = ""
     _forecast: Optional[dict]

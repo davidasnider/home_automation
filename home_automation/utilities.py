@@ -68,7 +68,7 @@ class Settings(BaseSettings):
     indigo_username: str
     indigo_password: str
     tmrw_location_id: str
-    tomorrow_io: str
+    tomorrow_io_api_key: str
     statsd_server: str = "statsd-service.metrics.svc.cluster.local."
     netatmo_client_id: str
     netatmo_client_secret: str
