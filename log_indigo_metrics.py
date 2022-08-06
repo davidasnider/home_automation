@@ -92,7 +92,7 @@ for device in devices_json:
             device_json = getIndigoDevice(device["restURL"])
             query_device["value"] = device_json["displayRawState"]
 
-# Now lets log it to InfluxDB
+# Now lets log it to InfluxDB using metrics server
 statsd_connection = statsd.StatsClient(settings.metrics_server, 8125)
 
 for device in indigo_devices:
