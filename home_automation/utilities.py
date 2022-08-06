@@ -1,5 +1,6 @@
 """Utilities modules that are common to many scripts and modules"""
 import smtplib
+import sys
 from email.message import EmailMessage
 from xmlrpc.client import Boolean
 
@@ -12,6 +13,21 @@ from requests.auth import HTTPDigestAuth
 # indigo_password = os.getenv("indigo_password")
 
 # Contains utilities that will be used across home automation scripts.
+
+
+def checkResponse(r):
+    """
+    Quick logic to check the http response code.
+
+    Parameters:
+            r = http response object.
+    """
+
+    acceptedResponses = [200, 201, 203, 204]
+    if r.status_code not in acceptedResponses:
+        print("STATUS:", r.status_code)
+        print("ERROR: ", r.text)
+        sys.exit(r.status_code)
 
 
 class Settings(BaseSettings):
@@ -53,6 +69,7 @@ class Settings(BaseSettings):
     indigo_password: str
     tmrw_location_id: str
     tomorrow_io: str
+    statsd_server: str = "statsd-service.metrics.svc.cluster.local."
 
 
 # Make these available in this module
