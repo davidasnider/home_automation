@@ -70,6 +70,10 @@ class Settings(BaseSettings):
     tmrw_location_id: str
     tomorrow_io: str
     statsd_server: str = "statsd-service.metrics.svc.cluster.local."
+    netatmo_client_id: str
+    netatmo_client_secret: str
+    netatmo_password: str
+    netatmo_device_id: str
 
 
 # Make these available in this module
