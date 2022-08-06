@@ -25,5 +25,6 @@ WORKDIR /app
 ADD home_automation /app/home_automation
 ADD sprinkler_multiplier.py /app/sprinkler_multiplier.py
 ADD update_magic_mirror_temp.py /app/update_magic_mirror_temp.py
+ADD log_indigo_metrics.py /app/log_indigo_metrics.py
 
 CMD ["python3", "/app/sprinkler_multiplier.py"]
