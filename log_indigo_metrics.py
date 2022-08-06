@@ -54,7 +54,7 @@ def getIndigoDevices():
     json
         All of the indigo devices
     """
-    url = "http://blanc.thesniderpad.com:8000/devices.json"
+    url = settings.indigo_url + "/devices.json"
     r = requests.get(
         url, auth=HTTPDigestAuth(settings.indigo_username, settings.indigo_password)
     )
@@ -76,7 +76,7 @@ def getIndigoDevice(uri):
     json
         a json object with the details for the device
     """
-    url = "http://blanc.thesniderpad.com:8000/devices/" + uri
+    url = settings.indigo_url + "/devices/" + uri
     r = requests.get(
         url, auth=HTTPDigestAuth(settings.indigo_username, settings.indigo_password)
     )
