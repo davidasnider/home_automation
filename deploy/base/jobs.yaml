@@ -12,27 +12,9 @@ spec:
         - name: sprinkler-multiplier
           image: ghcr.io/davidasnider/home_automation:v1.0.13
           imagePullPolicy: IfNotPresent
-          env:
-            - name: indigo_password
-              valueFrom:
-                secretKeyRef:
-                  name: credentials
-                  key: indigo_password
-            - name: indigo_username
-              valueFrom:
-                secretKeyRef:
-                  name: credentials
-                  key: indigo_username
-            - name: tmrw_location_id
-              valueFrom:
-                secretKeyRef:
-                  name: credentials
-                  key: tmrw_location_id
-            - name: tomorrow_io
-              valueFrom:
-                secretKeyRef:
-                  name: credentials
-                  key: tomorrow_io
+          envFrom:
+          - secretRef:
+              name: credentials
       restartPolicy: Never
   backoffLimit: 4
 ---
@@ -45,8 +27,6 @@ metadata:
 spec:
   template:
     spec:
-      nodeSelector:
-        kubernetes.io/arch: amd64
       containers:
         - name: update-magic-mirror-temp
           image: ghcr.io/davidasnider/home_automation:v1.0.13
@@ -54,26 +34,30 @@ spec:
           command:
             - python3
             - /app/update_magic_mirror_temp.py
-          env:
-            - name: indigo_password
-              valueFrom:
-                secretKeyRef:
-                  name: credentials
-                  key: indigo_password
-            - name: indigo_username
-              valueFrom:
-                secretKeyRef:
-                  name: credentials
-                  key: indigo_username
-            - name: tmrw_location_id
-              valueFrom:
-                secretKeyRef:
-                  name: credentials
-                  key: tmrw_location_id
-            - name: tomorrow_io
-              valueFrom:
-                secretKeyRef:
-                  name: credentials
-                  key: tomorrow_io
+          envFrom:
+          - secretRef:
+              name: credentials
+      restartPolicy: Never
+  backoffLimit: 4
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: log-indigo-metrics
+  labels:
+    app: home_automation
+spec:
+  template:
+    spec:
+      containers:
+        - name: log-indigo-metrics
+          image: ghcr.io/davidasnider/home_automation:v1.0.13
+          imagePullPolicy: IfNotPresent
+          command:
+            - python3
+            - /app/log_indigo_metrics.py
+          envFrom:
+          - secretRef:
+              name: credentials
       restartPolicy: Never
   backoffLimit: 4
