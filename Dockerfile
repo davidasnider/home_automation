@@ -23,7 +23,6 @@ ENV PATH /home/home_automation/.local/bin:$PATH
 
 WORKDIR /app
 ADD home_automation /app/home_automation
-ADD sprinkler_multiplier.py /app/sprinkler_multiplier.py
-ADD update_magic_mirror_temp.py /app/update_magic_mirror_temp.py
+ADD *.py /app
 
 CMD ["python3", "/app/sprinkler_multiplier.py"]
