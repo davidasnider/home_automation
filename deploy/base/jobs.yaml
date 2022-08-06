@@ -61,3 +61,25 @@ spec:
               name: credentials
       restartPolicy: Never
   backoffLimit: 4
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: log-netatmo
+  labels:
+    app: home_automation
+spec:
+  template:
+    spec:
+      containers:
+        - name: log-netatmo
+          image: ghcr.io/davidasnider/home_automation:v1.0.13
+          imagePullPolicy: IfNotPresent
+          command:
+            - python3
+            - /app/log_netatmo.py
+          envFrom:
+          - secretRef:
+              name: credentials
+      restartPolicy: Never
+  backoffLimit: 4
