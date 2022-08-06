@@ -18,12 +18,12 @@ client_secret = settings.netatmo_client_secret
 username = settings.email_to
 password = settings.netatmo_password
 device_id = settings.netatmo_device_id
-influx_server = settings.statsd_server
+metrics_server = settings.metrics_server
 indigo_username = settings.indigo_username
 indigo_password = settings.indigo_password
 
 data_start_time = int(time.time() * 1000)  # milliseconds
-influx = InfluxDBClient(host=influx_server, port=8086, database="metrics")
+influx = InfluxDBClient(host=metrics_server, port=8086, database="metrics")
 
 
 # Create a function to convert celsius to fahrenheit
