@@ -12,6 +12,7 @@ pandas = "^1.4.3"
 tabulate = "^0.8.10"
 matplotlib = "^3.5.2"
 Markdown = "^3.4.1"
+statsd = "^3.3.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1"
