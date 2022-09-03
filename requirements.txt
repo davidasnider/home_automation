@@ -7,9 +7,9 @@ charset-normalizer==2.0.12; python_version >= "3.7" and python_version < "4" and
 cycler==0.11.0; python_version >= "3.7" \
     --hash=sha256:3a27e95f763a428a739d2add979fa7494c912a32c17c4c38c4d5f082cad165a3 \
     --hash=sha256:9c87405839a19696e837b3b818fed3f5f69f16f1eec1a1ad77e043dcea9c772f
-fonttools==4.34.4; python_version >= "3.7" \
-    --hash=sha256:d73f25b283cd8033367451122aa868a23de0734757a01984e4b30b18b9050c72 \
-    --hash=sha256:9a1c52488045cd6c6491fd07711a380f932466e317cb8e016fc4e99dc7eac2f0
+fonttools==4.37.1; python_version >= "3.7" \
+    --hash=sha256:4606e1a88ee1f6699d182fea9511bd9a8a915d913eab4584e5226da1180fcce7 \
+    --hash=sha256:fff6b752e326c15756c819fe2fe7ceab69f96a1dbcfe8911d0941cdb49905007
 idna==3.3; python_version >= "3.7" and python_version < "4" \
     --hash=sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff \
     --hash=sha256:9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d
