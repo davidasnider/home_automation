@@ -14,4 +14,4 @@ secretGenerator:
   name: credentials
 images:
 - name: ghcr.io/davidasnider/home_automation
-  newTag: v1.0.100
+  newTag: v1.0.105
