@@ -13,9 +13,9 @@ cycler==0.11.0; python_version >= "3.7" \
 fonttools==4.37.1; python_version >= "3.7" \
     --hash=sha256:fff6b752e326c15756c819fe2fe7ceab69f96a1dbcfe8911d0941cdb49905007 \
     --hash=sha256:4606e1a88ee1f6699d182fea9511bd9a8a915d913eab4584e5226da1180fcce7
-google-api-core==2.8.2; python_version >= "3.7" \
-    --hash=sha256:06f7244c640322b508b125903bb5701bebabce8832f85aba9335ec00b3d02edc \
-    --hash=sha256:93c6a91ccac79079ac6bbf8b74ee75db970cc899278b97d53bc012f35908cf50
+google-api-core==2.10.0; python_version >= "3.7" \
+    --hash=sha256:1d053734f14591939e7764e99c31253fed46bf2578da0dcd82821f17a6dd991c \
+    --hash=sha256:325529859836a479244b0882c1a77320fd35cb108df2ec1232e3e908ea56eda4
 google-api-python-client==2.55.0; python_version >= "3.7" \
     --hash=sha256:1766c700eee14809ca1f7f52868c937755153289ea77ecdfd73dea6910e9a34d \
     --hash=sha256:7837094c6d35cc8e680b60ebefe37f117ad521f3b263b0c7a6efa0b2f84cb17a
