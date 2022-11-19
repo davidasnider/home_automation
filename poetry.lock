@@ -479,14 +479,14 @@ six = "*"
 
 [[package]]
 name = "google-auth-oauthlib"
-version = "0.5.3"
+version = "0.7.1"
 description = "Google Authentication Library"
 category = "main"
 optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
-google-auth = ">=1.0.0"
+google-auth = ">=2.14.0"
 requests-oauthlib = ">=0.7.0"
 
 [package.extras]
@@ -1668,7 +1668,7 @@ tests = ["cython", "littleutils", "pygments", "pytest", "typeguard"]
 
 [[package]]
 name = "statsd"
-version = "3.3.0"
+version = "4.0.1"
 description = "A simple statsd client."
 category = "main"
 optional = false
@@ -1687,11 +1687,11 @@ pbr = ">=2.0.0,<2.1.0 || >2.1.0"
 
 [[package]]
 name = "tabulate"
-version = "0.8.10"
+version = "0.9.0"
 description = "Pretty-print tabular data"
 category = "main"
 optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+python-versions = ">=3.7"
 
 [package.extras]
 widechars = ["wcwidth"]
@@ -1851,6 +1851,7 @@ python-versions = ">=3.7"
 lock-version = "1.1"
 python-versions = "^3.10"
 content-hash = "806ba4d3dfd6009f50181ee687b3349b2f230982db7b18db8aabdc04c69007cf"
+
 
 [metadata.files]
 anyio = [
@@ -2189,8 +2190,8 @@ google-auth-httplib2 = [
     {file = "google_auth_httplib2-0.1.0-py2.py3-none-any.whl", hash = "sha256:31e49c36c6b5643b57e82617cb3e021e3e1d2df9da63af67252c02fa9c1f4a10"},
 ]
 google-auth-oauthlib = [
-    {file = "google-auth-oauthlib-0.5.3.tar.gz", hash = "sha256:307d21918d61a0741882ad1fd001c67e68ad81206451d05fc4d26f79de56fc90"},
-    {file = "google_auth_oauthlib-0.5.3-py2.py3-none-any.whl", hash = "sha256:9e8ff4ed2b21c174a2d6cc2172c698dbf0b1f686509774c663a83c495091fe09"},
+    {file = "google-auth-oauthlib-0.7.1.tar.gz", hash = "sha256:9940f543f77d1447432a93781d7c931fb53e418023351ad4bf9e92837a1154ec"},
+    {file = "google_auth_oauthlib-0.7.1-py2.py3-none-any.whl", hash = "sha256:860e54c4b58b2664116c9cb44325bc0ec92bcd93e8211698ceea911b1b873b86"},
 ]
 googleapis-common-protos = [
     {file = "googleapis-common-protos-1.56.4.tar.gz", hash = "sha256:c25873c47279387cfdcbdafa36149887901d36202cb645a0e4f29686bf6e4417"},
@@ -3083,16 +3084,16 @@ stack-data = [
     {file = "stack_data-0.6.0.tar.gz", hash = "sha256:8e515439f818efaa251036af72d89e4026e2b03993f3453c000b200fb4f2d6aa"},
 ]
 statsd = [
-    {file = "statsd-3.3.0-py2.py3-none-any.whl", hash = "sha256:c610fb80347fca0ef62666d241bce64184bd7cc1efe582f9690e045c25535eaa"},
-    {file = "statsd-3.3.0.tar.gz", hash = "sha256:e3e6db4c246f7c59003e51c9720a51a7f39a396541cb9b147ff4b14d15b5dd1f"},
+    {file = "statsd-4.0.1-py2.py3-none-any.whl", hash = "sha256:c2676519927f7afade3723aca9ca8ea986ef5b059556a980a867721ca69df093"},
+    {file = "statsd-4.0.1.tar.gz", hash = "sha256:99763da81bfea8daf6b3d22d11aaccb01a8d0f52ea521daab37e758a4ca7d128"},
 ]
 stevedore = [
     {file = "stevedore-4.1.0-py3-none-any.whl", hash = "sha256:3b1cbd592a87315f000d05164941ee5e164899f8fc0ce9a00bb0f321f40ef93e"},
     {file = "stevedore-4.1.0.tar.gz", hash = "sha256:02518a8f0d6d29be8a445b7f2ac63753ff29e8f2a2faa01777568d5500d777a6"},
 ]
 tabulate = [
-    {file = "tabulate-0.8.10-py3-none-any.whl", hash = "sha256:0ba055423dbaa164b9e456abe7920c5e8ed33fcc16f6d1b2f2d152c8e1e8b4fc"},
-    {file = "tabulate-0.8.10.tar.gz", hash = "sha256:6c57f3f3dd7ac2782770155f3adb2db0b1a269637e42f27599925e64b114f519"},
+    {file = "tabulate-0.9.0-py3-none-any.whl", hash = "sha256:024ca478df22e9340661486f85298cff5f6dcdba14f3813e8830015b9ed1948f"},
+    {file = "tabulate-0.9.0.tar.gz", hash = "sha256:0095b12bf5966de529c0feb1fa08671671b3368eec77d7ef7ab114be2c068b3c"},
 ]
 terminado = [
     {file = "terminado-0.17.0-py3-none-any.whl", hash = "sha256:bf6fe52accd06d0661d7611cc73202121ec6ee51e46d8185d489ac074ca457c2"},
