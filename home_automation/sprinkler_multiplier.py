@@ -13,7 +13,7 @@ import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import pandas as pd
 import requests
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, PrivateAttr
 from tabulate import tabulate
 
 from home_automation import utilities
@@ -42,55 +42,18 @@ class sprinkler_multiplier(BaseModel):
         Validate that the value is not None, if None, raise a ValueError
     """
 
-    location: str = settings.tmrw_location_id
-    api_key: str = settings.tomorrow_io_api_key
     my_report: Optional[Any] = None
     my_report_html: str = ""
-    _forecast: Optional[dict]
-    _forecast_df: Any
-    _forecast_averages: Any
-    _forecast_rain: int = 0  # Default to zero, no rain
-    _value: int = 0  # Default to zero, we don't water
+    location: str = settings.tmrw_location_id
+    api_key: str = settings.tomorrow_io_api_key
+    _forecast: dict = PrivateAttr(default_factory=dict)
+    _forecast_df: Any = PrivateAttr()
+    _forecast_averages: Any = PrivateAttr()
+    _forecast_rain: int = PrivateAttr(default=0)  # Default to zero, no rain
+    _value: int = PrivateAttr(default=0)  # Default to zero, we don't water
     _chart_png = tempfile.NamedTemporaryFile(
         delete=False
     ).name  # Just the temp filename is all we need
-
-    # Anything with an underscore is a private attribute by default
-    class Config:
-        """Sets configuration for the BaseModel class"""
-
-        underscore_attrs_are_private = True
-
-    # We need to make sure these variables are not NONE (they don't exist)
-    # before we run the rest of the functions.
-    @validator("location", "api_key", always=True)
-    def validate_is_not_none(cls, v):
-        """Ensures that passed in attributes are not None
-
-        This is a custom validator used in Pydantic to ensure that both the
-        location and api_key are not None during class instantiation. These
-        are fed from an environment variable which will return None if not
-        set, therefore the validation is necessary. If the values are None,
-        the validator will raise a ValueError.
-
-        Parameters
-        ----------
-        v : Any
-            The variable to validate is not None
-
-        Returns
-        -------
-        v : Any
-            Will return whatever is passed in if it is not None
-
-        Raises
-        ------
-        ValueError
-            Informs the user that the environment variable is not set
-        """
-        if v is None:
-            raise ValueError("Environment variable not set")
-        return v
 
     # Get latest measurements
     def update_data(self):

@@ -10,7 +10,7 @@ def test_update_indigo_var():
     that is passed in will be returned.
     """
     random_number = random.randint(0, 100)
-    variable_name = "test_do_not_delete"
-    assert utilities.update_indigo_variable(variable_name, random_number)
-    return_value = utilities.get_indigo_variable(variable_name)
-    assert random_number == return_value
+    object_id = 797144911
+    assert utilities.update_indigo_variable(object_id=object_id, value=random_number)
+    return_value = utilities.get_indigo_variable(object_id=object_id)
+    assert str(random_number) == return_value
