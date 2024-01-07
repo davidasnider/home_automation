@@ -30,6 +30,9 @@ flake8 = "^6.0.0"
 bandit = "^1.7.4"
 interrogate = "^1.5.0"
 
+[tool.poetry.group.dev.dependencies]
+poetry-plugin-export = "^1.6.0"
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
