@@ -5,14 +5,10 @@ on:
   push:
     branches: [main]
 
-jobs:
-  build-name:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4.1.1
-      - name: Branch name
-        run: echo running on branch ${{ github.event.pull_request.head.ref }}
+env:
+  DOCKER_IMAGE: ghcr.io/davidasnider/home_automation
 
+jobs:
   build-primary-container:
     runs-on: ubuntu-latest
     permissions:
@@ -37,15 +33,16 @@ jobs:
       - name: Set version tags
         id: build-prep
         run: |
-          DOCKER_IMAGE=ghcr.io/davidasnider/home_automation
           VERSION=noop
           if [[ $GITHUB_REF == refs/pull/* ]]; then
             VERSION=v1.0.${{ github.event.number }}
           fi
-          TAGS="${DOCKER_IMAGE}:${VERSION}"
-          echo ::set-output name=version::${VERSION}
-          echo ::set-output name=tags::${TAGS}
-          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          echo "VERSION=${VERSION}"
+          echo "TAGS=${DOCKER_IMAGE}:${VERSION}" >> $GITHUB_ENV
+          echo "TAGS=${DOCKER_IMAGE}:${VERSION}"
+          echo "CREATED=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
+          echo "CREATED=$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
 
       - name: Build and push primary container
         uses: docker/build-push-action@v5
@@ -54,30 +51,16 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64, linux/arm64
           push: true
-          tags: ${{ steps.build-prep.outputs.tags }}
+          tags: ${{ env.TAGS }}
 
   deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: write
     needs:
-      - build-name
       - build-primary-container
 
     steps:
-      - name: Set version tags primary container
-        id: build-prep-primary-container
-        run: |
-          DOCKER_IMAGE=ghcr.io/davidasnider/home_automation
-          VERSION=noop
-          if [[ $GITHUB_REF == refs/pull/* ]]; then
-            VERSION="v1.0.${{ github.event.number }}"
-          fi
-          TAGS="${DOCKER_IMAGE}:${VERSION}"
-          echo ::set-output name=version::${VERSION}
-          echo ::set-output name=tags::${TAGS}
-          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-
       - name: Check out code
         uses: actions/checkout@v4.1.1
         with:
@@ -86,16 +69,30 @@ jobs:
       - name: Setup Kustomize
         uses: imranismail/setup-kustomize@v2
 
+      - name: Set version tags
+        id: build-prep
+        run: |
+          VERSION=noop
+          if [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION=v1.0.${{ github.event.number }}
+          fi
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          echo "VERSION=${VERSION}"
+          echo "TAGS=${DOCKER_IMAGE}:${VERSION}" >> $GITHUB_ENV
+          echo "TAGS=${DOCKER_IMAGE}:${VERSION}"
+          echo "CREATED=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
+          echo "CREATED=$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+
       - name: Update kubernetes resources
         run: |
           cd deploy/base
-          kustomize edit set image ${{ steps.build-prep-primary-container.outputs.tags }}
+          kustomize edit set image ${{ env.TAGS }}
           cat kustomization.yaml
           cd ../dev
-          kustomize edit set image ${{ steps.build-prep-primary-container.outputs.tags }}
+          kustomize edit set image ${{ env.TAGS }}
           cat kustomization.yaml
           cd ../prod
-          kustomize edit set image ${{ steps.build-prep-primary-container.outputs.tags }}
+          kustomize edit set image ${{ env.TAGS }}
           cat kustomization.yaml
 
       - name: Commit files
