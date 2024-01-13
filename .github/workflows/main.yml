@@ -69,6 +69,20 @@ jobs:
       - name: Setup Kustomize
         uses: imranismail/setup-kustomize@v2
 
+      - name: Set version tags
+        id: build-prep
+        run: |
+          VERSION=noop
+          if [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION=v1.0.${{ github.event.number }}
+          fi
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          echo "VERSION=${VERSION}"
+          echo "TAGS=${DOCKER_IMAGE}:${VERSION}" >> $GITHUB_ENV
+          echo "TAGS=${DOCKER_IMAGE}:${VERSION}"
+          echo "CREATED=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
+          echo "CREATED=$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+
       - name: Update kubernetes resources
         run: |
           cd deploy/base
