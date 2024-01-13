@@ -124,6 +124,8 @@ jobs:
 
   label-pr:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     needs:
       - pr-approve
     steps:
@@ -136,6 +138,8 @@ jobs:
 
   automerge:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     needs:
       - label-pr
     steps:
