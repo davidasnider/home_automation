@@ -139,7 +139,7 @@ jobs:
   automerge:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      pull-requests: write
     needs:
       - label-pr
     steps:
