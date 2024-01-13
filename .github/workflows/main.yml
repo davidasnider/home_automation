@@ -38,7 +38,7 @@ jobs:
           poetry install
 
       - name: Run pytest
-        run: poetry run pytest
+        run: poetry run pytest -s -v -m unittest
 
   build-primary-container:
     runs-on: ubuntu-latest
