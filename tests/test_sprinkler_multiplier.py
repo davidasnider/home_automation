@@ -19,6 +19,7 @@ def my_class():
     return my_class
 
 
+@pytest.mark.integration
 def test_environment_variables(my_class):
     """Ensure that the environment variables are set
 
@@ -31,6 +32,7 @@ def test_environment_variables(my_class):
     assert my_class.location is not None
 
 
+@pytest.mark.integration
 def test_get_update_data(my_class):
     """Pull the data and ensure that some of the objects are of the instance type
     we were expecting.
@@ -44,6 +46,7 @@ def test_get_update_data(my_class):
     assert isinstance(my_class._forecast_averages, pandas.core.series.Series)
 
 
+@pytest.mark.integration
 def test_calc_multiplier(my_class):
     """Thest that our object has a multiplier value and that it is an int. Also
     ensure that it has a non zero value.
@@ -57,6 +60,7 @@ def test_calc_multiplier(my_class):
     assert my_class.value >= 0
 
 
+@pytest.mark.integration
 def test_calc_rain_sum(my_class):
     """Thest that our object has a rain value and that it has a non zero value.
 
