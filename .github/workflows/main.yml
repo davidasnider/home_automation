@@ -118,7 +118,7 @@ jobs:
     needs:
       - deploy
     steps:
-      - uses: hmarr/auto-approve-action@v3.1.0
+      - uses: hmarr/auto-approve-action@v3.2.1
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
 
