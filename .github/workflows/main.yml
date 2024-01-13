@@ -12,6 +12,14 @@ jobs:
 
   pytest:
     runs-on: ubuntu-latest
+    env:
+      indigo_api_key: null
+      tmrw_location_id: null
+      tomorrow_io_api_key: null
+      netatmo_client_id: null
+      netatmo_client_secret: null
+      netatmo_password: null
+      netatmo_device_id: null
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
