@@ -1,9 +1,9 @@
 name: Test Build Merge Deploy
 
 on:
-  pull_request:
-  push:
-    branches: [main]
+  pull_request_target:
+  # push:
+  #   branches: [main]
 
 env:
   DOCKER_IMAGE: ghcr.io/davidasnider/home_automation
