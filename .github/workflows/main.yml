@@ -138,6 +138,8 @@ jobs:
 
   automerge:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     needs:
       - label-pr
     steps:
