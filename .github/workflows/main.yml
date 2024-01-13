@@ -124,6 +124,8 @@ jobs:
 
   label-pr:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     needs:
       - pr-approve
     steps:
