@@ -9,38 +9,10 @@ env:
   DOCKER_IMAGE: ghcr.io/davidasnider/home_automation
 
 jobs:
-  set-version-tags:
-    runs-on: ubuntu-latest
-    outputs:
-      version: ${{ steps.build-prep.outputs.version }}
-      tags: ${{ steps.build-prep.outputs.tags }}
-    steps:
-      - name: Set version tags
-        id: build-prep
-        run: |
-          VERSION=noop
-          if [[ $GITHUB_REF == refs/pull/* ]]; then
-            VERSION=v1.0.${{ github.event.number }}
-          fi
-          # TAGS="${DOCKER_IMAGE}:${VERSION}"
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
-          echo "VERSION=${VERSION}"
-          echo "TAGS=${DOCKER_IMAGE}:${VERSION}" >> $GITHUB_ENV
-          echo "TAGS=${DOCKER_IMAGE}:${VERSION}"
-          echo "CREATED=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
-          echo "CREATED=$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-
-  # build-name:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4.1.1
-
   build-primary-container:
     runs-on: ubuntu-latest
     permissions:
       packages: write
-    needs:
-        - set-version-tags
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.1
@@ -57,6 +29,20 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set version tags
+        id: build-prep
+        run: |
+          VERSION=noop
+          if [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION=v1.0.${{ github.event.number }}
+          fi
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          echo "VERSION=${VERSION}"
+          echo "TAGS=${DOCKER_IMAGE}:${VERSION}" >> $GITHUB_ENV
+          echo "TAGS=${DOCKER_IMAGE}:${VERSION}"
+          echo "CREATED=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
+          echo "CREATED=$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
 
       - name: Build and push primary container
         uses: docker/build-push-action@v5
