@@ -99,7 +99,11 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git commit -am "Bump docker tag"
+          if [[ `git status --porcelain` ]]; then
+            git commit -am "Bump docker tag"
+          else
+            echo "No changes to commit"
+          fi
 
       - name: Push changes
         uses: ad-m/github-push-action@v0.6.0
@@ -109,12 +113,14 @@ jobs:
 
   pr-approve:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     needs:
       - deploy
     steps:
       - uses: hmarr/auto-approve-action@v3.1.0
         with:
-          github-token: "${{ secrets.CR_PAT }}"
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
 
   label-pr:
     runs-on: ubuntu-latest
