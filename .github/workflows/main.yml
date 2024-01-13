@@ -140,6 +140,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
+      contents: write
     needs:
       - label-pr
     steps:
