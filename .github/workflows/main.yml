@@ -24,7 +24,7 @@ jobs:
           fi
           TAGS="${DOCKER_IMAGE}:${VERSION}"
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
-          echo "TAGS=${TAGS}" >> $GITHUB_ENV
+          echo "TAGS=${DOCKER_IMAGE}:${VERSION}" >> $GITHUB_ENV
           echo "CREATED=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
 
   build-name:
