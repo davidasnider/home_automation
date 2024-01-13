@@ -71,19 +71,6 @@ jobs:
       - build-primary-container
 
     steps:
-      - name: Set version tags primary container
-        id: build-prep-primary-container
-        run: |
-          DOCKER_IMAGE=ghcr.io/davidasnider/home_automation
-          VERSION=noop
-          if [[ $GITHUB_REF == refs/pull/* ]]; then
-            VERSION="v1.0.${{ github.event.number }}"
-          fi
-          TAGS="${DOCKER_IMAGE}:${VERSION}"
-          echo ::set-output name=version::${VERSION}
-          echo ::set-output name=tags::${TAGS}
-          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-
       - name: Check out code
         uses: actions/checkout@v4.1.1
         with:
@@ -95,13 +82,13 @@ jobs:
       - name: Update kubernetes resources
         run: |
           cd deploy/base
-          kustomize edit set image ${{ steps.build-prep-primary-container.outputs.tags }}
+          kustomize edit set image ${{ $env.TAGS }}
           cat kustomization.yaml
           cd ../dev
-          kustomize edit set image ${{ steps.build-prep-primary-container.outputs.tags }}
+          kustomize edit set image ${{ $env.TAGS }}
           cat kustomization.yaml
           cd ../prod
-          kustomize edit set image ${{ steps.build-prep-primary-container.outputs.tags }}
+          kustomize edit set image ${{ $env.TAGS }}
           cat kustomization.yaml
 
       - name: Commit files
