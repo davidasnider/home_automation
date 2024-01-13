@@ -60,7 +60,7 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64, linux/arm64
           push: true
-          tags: ${{ $env.TAGS }}
+          tags: ${{ env.TAGS }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -82,13 +82,13 @@ jobs:
       - name: Update kubernetes resources
         run: |
           cd deploy/base
-          kustomize edit set image ${{ $env.TAGS }}
+          kustomize edit set image ${{ env.TAGS }}
           cat kustomization.yaml
           cd ../dev
-          kustomize edit set image ${{ $env.TAGS }}
+          kustomize edit set image ${{ env.TAGS }}
           cat kustomization.yaml
           cd ../prod
-          kustomize edit set image ${{ $env.TAGS }}
+          kustomize edit set image ${{ env.TAGS }}
           cat kustomization.yaml
 
       - name: Commit files
