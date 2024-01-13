@@ -22,10 +22,13 @@ jobs:
           if [[ $GITHUB_REF == refs/pull/* ]]; then
             VERSION=v1.0.${{ github.event.number }}
           fi
-          TAGS="${DOCKER_IMAGE}:${VERSION}"
+          # TAGS="${DOCKER_IMAGE}:${VERSION}"
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          echo "VERSION=${VERSION}"
           echo "TAGS=${DOCKER_IMAGE}:${VERSION}" >> $GITHUB_ENV
+          echo "TAGS=${DOCKER_IMAGE}:${VERSION}"
           echo "CREATED=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
+          echo "CREATED=$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
 
   # build-name:
   #   runs-on: ubuntu-latest
