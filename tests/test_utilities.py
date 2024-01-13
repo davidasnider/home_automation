@@ -1,10 +1,13 @@
 """Tests for the utilities module"""
 import random
 
+import pytest
+
 from home_automation import utilities
 
 
 # Test updating a variable in indigo
+@pytest.mark.integration
 def test_update_indigo_var():
     """Test that the update_indigo_var function works as expected. The same value
     that is passed in will be returned.

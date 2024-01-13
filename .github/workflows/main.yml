@@ -9,6 +9,37 @@ env:
   DOCKER_IMAGE: ghcr.io/davidasnider/home_automation
 
 jobs:
+
+  pytest:
+    runs-on: ubuntu-latest
+    env:
+      indigo_api_key: null
+      tmrw_location_id: null
+      tomorrow_io_api_key: null
+      netatmo_client_id: null
+      netatmo_client_secret: null
+      netatmo_password: null
+      netatmo_device_id: null
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+
+      - name: Install dependencies
+        run: |
+          poetry install
+
+      - name: Run pytest
+        run: poetry run pytest -s -v -m unittest
+
   build-primary-container:
     runs-on: ubuntu-latest
     permissions:
@@ -59,6 +90,7 @@ jobs:
       contents: write
     needs:
       - build-primary-container
+      - pytest
 
     steps:
       - name: Check out code
