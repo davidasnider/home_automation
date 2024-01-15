@@ -1,5 +1,9 @@
 name: Test Build Merge Deploy
 
+concurrency:
+  group: test-build-merge-deploy
+  cancel-in-progress: false
+
 on:
   pull_request:
   push:
