@@ -42,7 +42,7 @@ jobs:
           poetry install
 
       - name: Run pytest
-        run: poetry run pytest -s -v -m unittest
+        run: poetry run pytest -s -v -m "not integration"
 
   gitleaks:
     runs-on: ubuntu-latest
