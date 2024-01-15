@@ -1,5 +1,9 @@
 name: Test Build Merge Deploy
 
+concurrency:
+  group: test-build-merge-deploy
+  cancel-in-progress: false
+
 on:
   pull_request:
   push:
@@ -38,7 +42,7 @@ jobs:
           poetry install
 
       - name: Run pytest
-        run: poetry run pytest -s -v -m unittest
+        run: poetry run pytest -s -v -m "not integration"
 
   gitleaks:
     runs-on: ubuntu-latest
