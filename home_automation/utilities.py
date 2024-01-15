@@ -87,7 +87,7 @@ def send_email(message: EmailMessage):
 
     s = smtplib.SMTP(host=SETTINGS.smtp_server, port=2525)
     s.send_message(message)
-    s.quit
+    s.quit()
 
 
 # Update Indigo Function
