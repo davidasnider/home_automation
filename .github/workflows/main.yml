@@ -44,6 +44,17 @@ jobs:
       - name: Run pytest
         run: poetry run pytest -s -v -m unittest
 
+  gitleaks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: "0"
+      # Gitleaks check for secrets
+      - name: Gitleaks
+        uses: zricethezav/gitleaks-action@v1.3.0
+
+
   build-primary-container:
     runs-on: ubuntu-latest
     permissions:
@@ -95,6 +106,7 @@ jobs:
     needs:
       - build-primary-container
       - pytest
+      - gitleaks
 
     steps:
       - name: Check out code
