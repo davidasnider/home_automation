@@ -3,7 +3,6 @@ import inspect
 import json
 import sys
 import tempfile
-import time
 from email.message import EmailMessage
 from email.utils import make_msgid
 from typing import Any, Optional
@@ -72,48 +71,35 @@ class sprinkler_multiplier(BaseModel):
             "apikey": self.api_key,
         }
 
-        give_up_after_tries = 3  # We should try 3 times, due to rate limiting
-        current_tries = 0
-        while current_tries < give_up_after_tries:
-            response = requests.request(
-                "POST", url, data=json.dumps(payload), headers=headers
+        response = requests.request(
+            "POST", url, data=json.dumps(payload), headers=headers
+        )
+        if response.ok:
+            self._forecast = response.json()
+            self._forecast_df = pd.json_normalize(
+                self._forecast["data"]["timelines"][0]["intervals"]
             )
-            if response.ok:
-                self._forecast = response.json()
-                self._forecast_df = pd.json_normalize(
-                    self._forecast["data"]["timelines"][0]["intervals"]
-                )
-                # Make the column names friendly
-                self._forecast_df.columns = ["Date", "Rain (in)", "Temp"]
+            # Make the column names friendly
+            self._forecast_df.columns = ["Date", "Rain (in)", "Temp"]
 
-                # Convert dates and make date the index
-                self._forecast_df["Date"] = pd.to_datetime(
-                    self._forecast_df["Date"]
-                ).dt.date
+            # Convert dates and make date the index
+            self._forecast_df["Date"] = pd.to_datetime(
+                self._forecast_df["Date"]
+            ).dt.date
 
-                # Change the index to the date time
-                self._forecast_df = self._forecast_df.set_index("Date")
+            # Change the index to the date time
+            self._forecast_df = self._forecast_df.set_index("Date")
 
-                # Calculate the average temperature for the next 5 days
-                self._forecast_averages = self._forecast_df[["Temp"]].head(5).mean()
+            # Calculate the average temperature for the next 5 days
+            self._forecast_averages = self._forecast_df[["Temp"]].head(5).mean()
 
-                # Just get the first 3 days of rain accumulation
-                self._forecast_rain = self._forecast_df[["Rain (in)"]][0:3].sum()[
-                    "Rain (in)"
-                ]
-                break  # Successful data pull, break out of the loop
-            elif response.status_code == 429:
-                print(f"Retry after {response.headers['Retry-After']} seconds")
-                # Sleep for how long the Retry-After header tells us, plus one second
-                time.sleep(int(response.headers["Retry-After"]) + 1)
-            else:
-                print("Get forecast failed, error: ", response.text)
-                sys.exit(255)
-            current_tries += 1  # Count the loop traversal
-
-        if current_tries == give_up_after_tries:
-            print("Exceeded retries, exiting.")
-            sys.exit(1)  # no data, fail
+            # Just get the first 3 days of rain accumulation
+            self._forecast_rain = self._forecast_df[["Rain (in)"]][0:3].sum()[
+                "Rain (in)"
+            ]
+        else:
+            print("Get forecast failed, error: ", response.text)
+            sys.exit(255)
 
     def calc_multiplier(self):
         """Calculate the sprinkler multiplier for home automation system"""
