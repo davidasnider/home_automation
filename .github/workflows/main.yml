@@ -53,6 +53,8 @@ jobs:
       # Gitleaks check for secrets
       - name: Gitleaks
         uses: zricethezav/gitleaks-action@v2.3.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
   build-primary-container:
