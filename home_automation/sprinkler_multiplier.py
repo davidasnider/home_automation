@@ -1,4 +1,5 @@
 """Module for dealing with sprinkler automation, specifically the multiplier."""
+
 import inspect
 import json
 import sys

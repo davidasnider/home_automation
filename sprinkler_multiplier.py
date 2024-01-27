@@ -1,6 +1,7 @@
 """Primary script for calculating the sprinkler multiplier data and posting
 to Indigo.
 """
+
 from home_automation import sprinkler_multiplier, utilities
 
 # Create our multiplier object

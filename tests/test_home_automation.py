@@ -1,4 +1,5 @@
 """Tests for the home_automation module"""
+
 from home_automation import __version__
 
 
