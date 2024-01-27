@@ -1,4 +1,5 @@
 """Tests for the utilities module"""
+
 import random
 
 import pytest

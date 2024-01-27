@@ -1,4 +1,5 @@
 """Tests for the sprinkler multiplier module"""
+
 import smtplib
 from datetime import datetime
 from unittest.mock import Mock, patch
