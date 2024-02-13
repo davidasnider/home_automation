@@ -23,7 +23,7 @@ pydantic-settings = "^2.1.0"
 [tool.poetry.dev-dependencies]
 pytest = "^8.0.0"
 pre-commit = "^3.6.1"
-black = "^24.1.1"
+black = "^24.2.0"
 pytest-dotenv = "^0.5.2"
 jupyter = "^1.0.0"
 detect-secrets = "^1.3.0"
