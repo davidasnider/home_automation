@@ -28,7 +28,7 @@ pytest-dotenv = "^0.5.2"
 jupyter = "^1.0.0"
 detect-secrets = "^1.3.0"
 flake8 = "^7.0.0"
-bandit = "^1.7.7"
+bandit = "^1.7.8"
 interrogate = "^1.5.0"
 
 [tool.poetry.group.dev.dependencies]
