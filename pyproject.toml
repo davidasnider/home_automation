@@ -32,7 +32,7 @@ bandit = "^1.7.8"
 interrogate = "^1.5.0"
 
 [tool.poetry.group.dev.dependencies]
-poetry-plugin-export = "^1.6.0"
+poetry-plugin-export = "^1.7.1"
 pytest-cov = "^4.1.0"
 pytest-mock = "^3.12.0"
 
