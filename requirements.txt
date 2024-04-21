@@ -192,9 +192,9 @@ fonttools==4.51.0 ; python_version >= "3.10" and python_version < "4.0" \
 google-api-core==2.18.0 ; python_version >= "3.10" and python_version < "4.0" \
     --hash=sha256:5a63aa102e0049abe85b5b88cb9409234c1f70afcda21ce1e40b285b9629c1d6 \
     --hash=sha256:62d97417bfc674d6cef251e5c4d639a9655e00c45528c4364fbfebb478ce72a9
-google-api-python-client==2.125.0 ; python_version >= "3.10" and python_version < "4.0" \
-    --hash=sha256:0a62b60fbd61b61a455f15d925264b3301099b67cafd2d33cf8bf151f1fca4f4 \
-    --hash=sha256:51a0385cff65ec135106e8be60ee7112557396dde5f44113ae23912baddda143
+google-api-python-client==2.126.0 ; python_version >= "3.10" and python_version < "4.0" \
+    --hash=sha256:299255fdb8dddf4eb96ab99e8358991160900b4109a9e0d3e3ac127c04b1e2ee \
+    --hash=sha256:97c0410630e2bebd194d99e91bd620dab5bc6b6ec0bf033f9a9109b700b83acb
 google-auth-httplib2==0.2.0 ; python_version >= "3.10" and python_version < "4.0" \
     --hash=sha256:38aa7badf48f974f1eb9861794e9c0cb2a0511a4ec0679b1f886d108f5640e05 \
     --hash=sha256:b65a0a2123300dd71281a7bf6e64d65a0759287df52729bdd1ae2e47dc311a3d
@@ -213,9 +213,9 @@ httplib2==0.22.0 ; python_version >= "3.10" and python_version < "4.0" \
 idna==3.7 ; python_version >= "3.10" and python_version < "4.0" \
     --hash=sha256:028ff3aadf0609c1fd278d8ea3089299412a7a8b9bd005dd08b9f8285bcb5cfc \
     --hash=sha256:82fee1fc78add43492d3a1898bfa6d8a904cc97d8427f683ed8e798d07761aa0
-influxdb==5.3.1 ; python_version >= "3.10" and python_version < "4.0" \
-    --hash=sha256:46f85e7b04ee4b3dee894672be6a295c94709003a7ddea8820deec2ac4d8b27a \
-    --hash=sha256:65040a1f53d1a2a4f88a677e89e3a98189a7d30cf2ab61c318aaa89733280747
+influxdb==5.3.2 ; python_version >= "3.10" and python_version < "4.0" \
+    --hash=sha256:00d86b18a968d011b2eee39ec3b2ae941b1dcf7086bc7211e675914623caffcd \
+    --hash=sha256:58c647f6043712dd86e9aee12eb4ccfbbb5415467bc9910a48aa8c74c1108970
 kiwisolver==1.4.5 ; python_version >= "3.10" and python_version < "4.0" \
     --hash=sha256:00bd361b903dc4bbf4eb165f24d1acbee754fce22ded24c3d56eec268658a5cf \
     --hash=sha256:040c1aebeda72197ef477a906782b5ab0d387642e93bda547336b8957c61022e \
