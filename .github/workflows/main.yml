@@ -52,7 +52,7 @@ jobs:
           fetch-depth: "0"
       # Gitleaks check for secrets
       - name: Gitleaks
-        uses: zricethezav/gitleaks-action@v2.3.4
+        uses: zricethezav/gitleaks-action@v2.3.5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
