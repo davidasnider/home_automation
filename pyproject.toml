@@ -24,7 +24,7 @@ poetry-plugin-export = "^1.8.0"
 [tool.poetry.dev-dependencies]
 pytest = "^8.3.2"
 pre-commit = "^3.8.0"
-black = "^24.4.2"
+black = "^24.8.0"
 pytest-dotenv = "^0.5.2"
 jupyter = "^1.0.0"
 detect-secrets = "^1.5.0"
