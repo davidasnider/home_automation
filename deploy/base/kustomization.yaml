@@ -7,4 +7,4 @@ resources:
 namespace: default
 images:
 - name: ghcr.io/davidasnider/home_automation
-  newTag: v1.0.360
+  newTag: v1.0.361
