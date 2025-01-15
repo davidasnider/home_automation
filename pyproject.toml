@@ -7,7 +7,7 @@ authors = ["David Snider <david@davidsnider.org>"]
 [tool.poetry.dependencies]
 python = "^3.10"
 pydantic = "^2.7"
-requests = "^2.32.2"
+requests = "^2.32.3"
 pandas = "^2.2.3"
 tabulate = "^0.9.0"
 matplotlib = "^3.10.0"
