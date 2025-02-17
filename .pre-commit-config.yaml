@@ -18,17 +18,17 @@ repos:
         args: [--baseline, .secrets.baseline]
         exclude: .*/tests/.*
   - repo: https://github.com/psf/black
-    rev: 24.10.0
+    rev: 25.1.0
     hooks:
       - id: black
         # language_version: python3.9
   - repo: https://github.com/PyCQA/flake8
-    rev: "7.1.1"
+    rev: "7.1.2"
     hooks:
       - id: flake8
 
   - repo: https://github.com/executablebooks/mdformat
-    rev: 0.7.21 # Use the ref you want to point at
+    rev: 0.7.22 # Use the ref you want to point at
     hooks:
       - id: mdformat
         # optional
@@ -53,6 +53,6 @@ repos:
         args: [--fail-under=95, --verbose]
 
   - repo: https://github.com/PyCQA/isort
-    rev: 5.13.2
+    rev: 6.0.0
     hooks:
     -   id: isort
