@@ -1,6 +1,6 @@
 """Updates the magic mirror indoor temperature setting based on the
-   office_temperature variable, which is set by a scheduled task named:
-   'Update Office Temperature'
+office_temperature variable, which is set by a scheduled task named:
+'Update Office Temperature'
 """
 
 from home_automation import utilities
